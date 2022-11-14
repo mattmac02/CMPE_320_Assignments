@@ -5,10 +5,10 @@
 
 //Constructor
 JumblePuzzle::JumblePuzzle(const string& userInput, const string& diff) {
-    if (userInput.length() <= 2 || userInput.length() >= 11){
+    if (userInput.length() <= 2 || userInput.length() >= 11){   //Length is not between 3 and 10
         throw BadJumbleException("Not a valid input. Word length not allowed.");
     }
-    if (diff != "easy" && diff != "medium" && diff != "hard"){
+    if (diff != "easy" && diff != "medium" && diff != "hard"){  //Invalid game difficulty input
         throw BadJumbleException("Not a valid game mode.");
     }
     this->diff = diff;
@@ -35,38 +35,54 @@ const int& JumblePuzzle::makeSize() {
 charArrayPtr *JumblePuzzle::createPuzz() {
     charArrayPtr* filledPuzz = randPuzz(puzzSize);
     int i = 0;
-    int pos = 0;
+    int c;
+    int r;
     while (i == 0){
         direc = direcArr[rand() % 4];   //Choosing a random direction out of the 4 possible choices
         colP = rand() % puzzSize;   //Randomly choosing the column to insert to
         rowP = rand() % puzzSize;   //Randomly choosing the row to insert to
+        c = this->colP;
+        r = this->rowP;
+        int pos = 0;
         if (direc == 'n'){
-            while (rowP >= 0 && pos < userInput.length()){
-                filledPuzz[rowP--][colP] = userInput[pos++];    //Insert the word letter by letter in the corresponding direction
+            while (r >= 0 && pos < userInput.length()){
+                filledPuzz[r--][c] = userInput[pos++];    //Insert the word letter by letter in the corresponding direction
+            }
+            if (rowP == puzzSize && pos != userInput.length()){ //Entire word has not been inserted so stay in the while loop but with a new random direction
+                direc = direcArr[rand() % 4];
+            }
+            if (pos == userInput.length()){ //If the word has been entirely inserted exit the while loop
+                i = 1;
+            }
+        }
+        else if (direc == 's'){
+            while (r < puzzSize && pos < userInput.length()){
+                filledPuzz[r++][c] = userInput[pos++];
+            }
+            if (rowP == puzzSize && pos != userInput.length()){
+                direc = direcArr[rand() % 4];
             }
             if (pos == userInput.length()){
                 i = 1;
             }
         }
         else if (direc == 'e'){
-            while (colP < puzzSize && pos < userInput.length()){
-                filledPuzz[rowP][colP++] = userInput[pos++];
+            while (c < puzzSize && pos < userInput.length()){
+                filledPuzz[r][c++] = userInput[pos++];
             }
-            if (pos == userInput.length()){
-                i = 1;
-            }
-        }
-        else if (direc == 's'){
-            while (rowP < puzzSize && pos < userInput.length()){
-                filledPuzz[rowP++][colP] = userInput[pos++];
+            if (rowP == puzzSize && pos != userInput.length()){
+                direc = direcArr[rand() % 4];
             }
             if (pos == userInput.length()){
                 i = 1;
             }
         }
         else if (direc == 'w'){
-            while (colP >= 0 && pos < userInput.length()){
-                filledPuzz[rowP][colP--] = userInput[pos++];
+            while (c >= 0 && pos < userInput.length()){
+                filledPuzz[r][c--] = userInput[pos++];
+            }
+            if (rowP == puzzSize && pos != userInput.length()){
+                direc = direcArr[rand() % 4];
             }
             if (pos == userInput.length()){
                 i = 1;
@@ -103,7 +119,7 @@ charArrayPtr *JumblePuzzle::getJumble() const {
     return tempPuzzle;
 }
 
-//Destructor
+//Destructor for deleting a 2D array from the heap
 JumblePuzzle::~JumblePuzzle() {
     for (int i = 0; i < this->puzzSize; i++) {
         delete[] puzz[i];
