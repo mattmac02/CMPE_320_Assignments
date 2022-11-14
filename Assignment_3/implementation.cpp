@@ -1,3 +1,6 @@
+//
+// Created by Matthew MacEachern on 11/11/22.
+//
 #include "jumble.h"
 #include <time.h>
 #include <stdlib.h>
@@ -142,6 +145,7 @@ JumblePuzzle& JumblePuzzle::operator=(const JumblePuzzle& right) {
         direc = right.getDirection();
 
         charArrayPtr* currPuzz = right.getJumble();
+
         puzz = new charArrayPtr[puzzSize];
 
         for (int i = 0; i < puzzSize; i++) {
@@ -167,6 +171,7 @@ JumblePuzzle::JumblePuzzle(const JumblePuzzle &jumb) {
     puzzSize = jumb.getSize();
 
     charArrayPtr* currPuzz = jumb.getJumble();
+
     puzz = new charArrayPtr[this->puzzSize];
 
     for (int i = 0; i < puzzSize; i++) {
