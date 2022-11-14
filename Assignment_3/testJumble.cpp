@@ -1,3 +1,6 @@
+//
+// Created by Matthew MacEachern on 11/11/22.
+//
 /*
  * A testing class for your JumblePuzzle class and its exception. A few unit
  * tests are provided but you will need to add a few more.
@@ -50,6 +53,7 @@ void playGame() {
     cin >> toHide;
     cout << "\nChoose your difficulty level: \"easy\", \"medium\" or \"hard\": ";
     cin >> difficulty;
+    printf("heyoooo");
 
     JumblePuzzle* jp;
     try {
@@ -136,6 +140,51 @@ void testJumble() {
     cout << "Should be same as original 4:" << endl;
     showJumble(jp4.getJumble(), sz);
 
+    //Custom Black Box Testing Section:
+
+    //Using the copy constructor attributes to be compared for further black box testing
+    JumblePuzzle jpTest(jp1);
+
+    //Testing the values of the row position for the copy constructor and JumblePuzzle base value
+    int row1 = jpTest.getRowPos();
+    int row2 = jp1.getRowPos();
+    if (row1 == row2){
+        printf("SUCCESS\n");
+    }
+    else {
+        printf("FAIL\n");
+    }
+
+    //Testing the values of the column position for the copy constructor and JumblePuzzle base value
+    int col1 = jpTest.getColPos();
+    int col2 = jp1.getColPos();
+    if (col1 == col2){
+        printf("SUCCESS\n");
+    }
+    else {
+        printf("FAIL\n");
+    }
+
+    //Testing the values of the grid size for the copy constructor and JumblePuzzle base value
+    int size1 = jpTest.getSize();
+    int size2 = jp1.getSize();
+    if (size1 == size2){
+        printf("SUCCESS\n");
+    }
+    else {
+        printf("FAIL\n");
+    }
+
+    //Testing the values of the grid size for the copy constructor and JumblePuzzle base value
+    char dir1 = jpTest.getDirection();
+    char dir2 = jp1.getDirection();
+    if (dir1 == dir2){
+        printf("SUCCESS\n");
+    }
+    else {
+        printf("FAIL\n");
+    }
+
     // Test for a memory leak.
     // This is a pretty slow test and it may be that the limit of the loop
     // will not be large enough to show a memory leak, especially if you have
@@ -154,12 +203,13 @@ void testJumble() {
 
 } // end testJumble
 
+
 int main() {
 
     testJumble();
 
     // Make sure your class works before you play the game!
-    //playGame();
+//    playGame();
 
     return 0;
 } // end main
