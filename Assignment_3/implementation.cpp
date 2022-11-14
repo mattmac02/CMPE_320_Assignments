@@ -5,11 +5,11 @@
 
 //Constructor
 JumblePuzzle::JumblePuzzle(const string& userInput, const string& diff) {
-    if (userInput.length() <= 2 || userInput.length() >= 11){   //Length is not between 3 and 10
-        throw BadJumbleException("Not a valid input. Word length not allowed.");
-    }
     if (diff != "easy" && diff != "medium" && diff != "hard"){  //Invalid game difficulty input
         throw BadJumbleException("Not a valid game mode.");
+    }
+    if (userInput.length() <= 2 || userInput.length() >= 11){   //Length is not between 3 and 10
+        throw BadJumbleException("Not a valid input. Word length not allowed.");
     }
     this->diff = diff;
     this->userInput = userInput;
@@ -38,12 +38,12 @@ charArrayPtr *JumblePuzzle::createPuzz() {
     int c;
     int r;
     while (i == 0){
+        int pos = 0;
         direc = direcArr[rand() % 4];   //Choosing a random direction out of the 4 possible choices
         colP = rand() % puzzSize;   //Randomly choosing the column to insert to
         rowP = rand() % puzzSize;   //Randomly choosing the row to insert to
         c = this->colP;
         r = this->rowP;
-        int pos = 0;
         if (direc == 'n'){
             while (r >= 0 && pos < userInput.length()){
                 filledPuzz[r--][c] = userInput[pos++];    //Insert the word letter by letter in the corresponding direction
@@ -51,7 +51,7 @@ charArrayPtr *JumblePuzzle::createPuzz() {
             if (rowP == puzzSize && pos != userInput.length()){ //Entire word has not been inserted so stay in the while loop but with a new random direction
                 direc = direcArr[rand() % 4];
             }
-            if (pos == userInput.length()){ //If the word has been entirely inserted exit the while loop
+            if (pos == userInput.length()){ //If the word has been entirely inserted exit the while loop by setting i = 1
                 i = 1;
             }
         }
@@ -101,22 +101,22 @@ charArrayPtr *JumblePuzzle::randPuzz(const int& size) {
         randPuzz[i] = new char[size];
         for (int k = 0; k < size; k++){
             n = rand() % 26;
-            randPuzz[i][k] = 'a' + n;
+            randPuzz[i][k] = 'a' + n;   //Ensuring the character is a lowercase letter in the alphabet
         }
     }
     return randPuzz;
 }
 
-//Prevent aliasing
+//Prevent aliasing by creating tempPuzz to differentiate the puzzle objects
 charArrayPtr *JumblePuzzle::getJumble() const {
-    charArrayPtr* tempPuzzle = new charArrayPtr[puzzSize];
+    charArrayPtr* tempPuzz = new charArrayPtr[puzzSize];
     for (int i = 0; i < puzzSize; i++) {
-        tempPuzzle[i] = new char[puzzSize];
+        tempPuzz[i] = new char[puzzSize];
         for (int j = 0; j < puzzSize; j++) {
-            tempPuzzle[i][j] = puzz[i][j];
+            tempPuzz[i][j] = puzz[i][j];
         }
     }
-    return tempPuzzle;
+    return tempPuzz;
 }
 
 //Destructor for deleting a 2D array from the heap
@@ -135,6 +135,7 @@ JumblePuzzle& JumblePuzzle::operator=(const JumblePuzzle& right) {
             delete[] puzz[i];
         }
         delete[] puzz;
+
         puzzSize = right.getSize();
         rowP = right.getRowPos();
         colP = right.getColPos();
